@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:flutter_complete_guide/models/product.dart';
+import 'package:flutter_complete_guide/providers/product.dart';
 import '../providers/products.dart';
 import '/widgets/product_item.dart';
 
