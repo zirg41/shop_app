@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
+import 'package:provider/provider.dart';
+import 'package:flutter_complete_guide/models/product.dart';
 import '../providers/products.dart';
-import '/models/product.dart';
 import '/widgets/product_item.dart';
 
 class ProductsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final productsData = Provider.of<Products>(context);
-    final products = productsData.items;
+    final Products productsData = Provider.of<Products>(context); // provider
+    final List<Product> products = productsData.items; // provided data
 
     return GridView.builder(
       padding: const EdgeInsets.all(10),
