@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_complete_guide/providers/products.dart';
+import 'package:provider/provider.dart';
 
 import '/providers/product.dart';
 
@@ -52,14 +54,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void _saveForm() {
     bool isValid = _form.currentState.validate();
 
-    if (isValid) {
-      _form.currentState.save();
-      print(_editedProduct.title);
-      print(_editedProduct.description);
-      print(_editedProduct.price);
-      print(_editedProduct.imageUrl);
+    if (!isValid) {
+      return;
     }
-    return;
+    _form.currentState.save();
+    print(_editedProduct.title);
+    print(_editedProduct.description);
+    print(_editedProduct.price);
+    print(_editedProduct.imageUrl);
+
+    Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    Navigator.of(context).pop();
   }
 
   @override
