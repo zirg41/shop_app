@@ -63,7 +63,7 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     // const url =
     //     "https://shop-app-2cddb-default-rtdb.firebaseio.com/products.json";
     var url = Uri.https(
@@ -71,7 +71,7 @@ class Products with ChangeNotifier {
       '/products.json',
     );
 
-    http
+    return http
         .post(url,
             body: json.encode({
               "title": product.title,
