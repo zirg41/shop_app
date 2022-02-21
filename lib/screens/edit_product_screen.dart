@@ -81,7 +81,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     bool isValid = _form.currentState.validate();
 
     if (!isValid) {
@@ -103,10 +103,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
       Navigator.of(context).pop();
     } else
-      Provider.of<Products>(context, listen: false)
-          .addProduct(_editedProduct)
-          .catchError((error) {
-        return showDialog<Null>(
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_editedProduct);
+      } catch (e) {
+        await showDialog<Null>(
           context: context,
           builder: (context) {
             return AlertDialog(
@@ -122,13 +123,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
             );
           },
         );
-      }).then((value) {
+      } finally {
         setState(() {
           _isLoading = false;
         });
         Navigator.of(context).pop();
-      });
-    // Navigator.of(context).pop();
+      }
   }
 
   @override

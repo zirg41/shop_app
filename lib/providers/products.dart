@@ -63,26 +63,21 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> addProduct(Product product) {
-    // const url =
-    //     "https://shop-app-2cddb-default-rtdb.firebaseio.com/products.json";
+  Future<void> addProduct(Product product) async {
     var url = Uri.https(
-      "shop-app-2cddb-default-rtdb.firebaseio.com",
-      '/products.json',
-    );
+        "shop-app-2cddb-default-rtdb.firebaseio.com", '/products.json');
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({
+          "title": product.title,
+          "description": product.description,
+          "inageUrl": product.imageUrl,
+          "price": product.price,
+          "favorite": product.isFavorite,
+        }),
+      );
 
-    return http
-        .post(
-      url,
-      body: json.encode({
-        "title": product.title,
-        "description": product.description,
-        "inageUrl": product.imageUrl,
-        "price": product.price,
-        "favorite": product.isFavorite,
-      }),
-    )
-        .then((response) {
       print(json.decode(response.body));
       final newProduct = Product(
         id: json.decode(response.body)['name'], // using database id
@@ -94,10 +89,10 @@ class Products with ChangeNotifier {
       _items.add(newProduct);
 
       notifyListeners();
-    }).catchError((error) {
+    } catch (error) {
       print(error);
       throw error;
-    });
+    }
   }
 
   Product findById(String id) {
