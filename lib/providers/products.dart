@@ -72,14 +72,16 @@ class Products with ChangeNotifier {
     );
 
     return http
-        .post(url,
-            body: json.encode({
-              "title": product.title,
-              "description": product.description,
-              "inageUrl": product.imageUrl,
-              "price": product.price,
-              "favorite": product.isFavorite,
-            }))
+        .post(
+      url,
+      body: json.encode({
+        "title": product.title,
+        "description": product.description,
+        "inageUrl": product.imageUrl,
+        "price": product.price,
+        "favorite": product.isFavorite,
+      }),
+    )
         .then((response) {
       print(json.decode(response.body));
       final newProduct = Product(
@@ -92,6 +94,9 @@ class Products with ChangeNotifier {
       _items.add(newProduct);
 
       notifyListeners();
+    }).catchError((error) {
+      print(error);
+      throw error;
     });
   }
 
