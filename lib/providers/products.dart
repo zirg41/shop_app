@@ -149,7 +149,23 @@ class Products with ChangeNotifier {
   }
 
   void deleteProduct(String id) {
-    _items.removeWhere((element) => element.id == id);
+    var url = Uri.https(_authority, '/products/$id.json');
+
+    final existingProductIndex =
+        _items.indexWhere((element) => element.id == id);
+    var existingProduct = _items[existingProductIndex];
+
+    http.delete(url).then((response) {
+      if (response.statusCode >= 400) {
+        throw Exception();
+      }
+      existingProduct = null;
+    }).catchError((_) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+    });
+    //_items.removeWhere((element) => element.id == id);
+    _items.removeAt(existingProductIndex);
     notifyListeners();
   }
 }
