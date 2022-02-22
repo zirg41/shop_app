@@ -41,8 +41,8 @@ class Products with ChangeNotifier {
   ];
 
   // var _showFavoritesOnly = false;
-  var url =
-      Uri.https("shop-app-2cddb-default-rtdb.firebaseio.com", '/products.json');
+  static const String _authority = "shop-app-2cddb-default-rtdb.firebaseio.com";
+  static const String _productsPath = "/products.json";
 
   List<Product> get items {
     // if (_showFavoritesOnly) {
@@ -67,6 +67,7 @@ class Products with ChangeNotifier {
 
   Future<void> fetchAndSetProduct() async {
     try {
+      var url = Uri.https(_authority, _productsPath);
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProduct = [];
@@ -91,6 +92,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     try {
+      var url = Uri.https(_authority, _productsPath);
       final response = await http.post(
         url,
         body: json.encode({
@@ -123,9 +125,22 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  void updateProduct(String id, Product newProduct) {
+  void updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
+      var url = Uri.https(_authority, '/products/$id.json');
+      await http.patch(
+        url,
+        body: json.encode(
+          {
+            "title": newProduct.title,
+            "description": newProduct.description,
+            "imageUrl": newProduct.imageUrl,
+            "price": newProduct.price,
+            "favorite": newProduct.isFavorite,
+          },
+        ),
+      );
       _items[prodIndex] = newProduct;
       notifyListeners();
     } else {
