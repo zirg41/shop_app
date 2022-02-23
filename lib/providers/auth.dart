@@ -30,7 +30,7 @@ class Auth with ChangeNotifier {
     return _authenticate(email, password, _signUpUrl);
   }
 
-  Future<void> signIn(String email, String password) async {
+  Future<void> login(String email, String password) async {
     return _authenticate(email, password, _signInUrl);
   }
 }
