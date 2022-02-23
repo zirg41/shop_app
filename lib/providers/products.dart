@@ -42,7 +42,7 @@ class Products with ChangeNotifier {
   ];
 
   // var _showFavoritesOnly = false;
-  static const String _authority = "shop-app-2cddb-default-rtdb.firebaseio.com";
+  static const String authority = "shop-app-2cddb-default-rtdb.firebaseio.com";
   static const String _productsPath = "/products.json";
 
   List<Product> get items {
@@ -68,7 +68,7 @@ class Products with ChangeNotifier {
 
   Future<void> fetchAndSetProduct() async {
     try {
-      var url = Uri.https(_authority, _productsPath);
+      var url = Uri.https(authority, _productsPath);
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProduct = [];
@@ -93,7 +93,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     try {
-      var url = Uri.https(_authority, _productsPath);
+      var url = Uri.https(authority, _productsPath);
       final response = await http.post(
         url,
         body: json.encode({
@@ -129,7 +129,7 @@ class Products with ChangeNotifier {
   void updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      var url = Uri.https(_authority, '/products/$id.json');
+      var url = Uri.https(authority, '/products/$id.json');
       await http.patch(
         url,
         body: json.encode(
@@ -150,7 +150,7 @@ class Products with ChangeNotifier {
   }
 
   void deleteProduct(String id) async {
-    var url = Uri.https(_authority, '/products/$id.json');
+    var url = Uri.https(authority, '/products/$id.json');
 
     final existingProductIndex =
         _items.indexWhere((element) => element.id == id);
