@@ -65,10 +65,15 @@ class Products with ChangeNotifier {
   //   _showFavoritesOnly = false;
   //   notifyListeners();
   // }
+  final String authToken;
+
+  Products(this.authToken, this._items);
 
   Future<void> fetchAndSetProduct() async {
     try {
-      var url = Uri.https(authority, _productsPath);
+      var url = Uri.parse(
+          "https://shop-app-2cddb-default-rtdb.firebaseio.com/products.jsons?auth=" +
+              authToken);
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProduct = [];
@@ -93,7 +98,9 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     try {
-      var url = Uri.https(authority, _productsPath);
+      var url = Uri.parse(
+          "https://shop-app-2cddb-default-rtdb.firebaseio.com/products.jsons?auth=" +
+              authToken);
       final response = await http.post(
         url,
         body: json.encode({
@@ -129,7 +136,7 @@ class Products with ChangeNotifier {
   void updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      var url = Uri.https(authority, '/products/$id.json');
+      var url = Uri.https(authority, '/products/$id.json?auth=' + authToken);
       await http.patch(
         url,
         body: json.encode(
@@ -150,7 +157,7 @@ class Products with ChangeNotifier {
   }
 
   void deleteProduct(String id) async {
-    var url = Uri.https(authority, '/products/$id.json');
+    var url = Uri.https(authority, '/products/$id.json?auth=' + authToken);
 
     final existingProductIndex =
         _items.indexWhere((element) => element.id == id);
