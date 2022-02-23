@@ -42,8 +42,15 @@ class UserProductItem extends StatelessWidget {
                 try {
                   // НЕ ПОНИМАЮ ПОЧЕМУ ЛИСН ФОЛС
                   // ЕБАНЫЙ ЕБАТЬ
+                  print("before await");
                   await Provider.of<Products>(context, listen: false)
                       .deleteProduct(id);
+                  print("after await");
+                  scaffold.showSnackBar(
+                    SnackBar(
+                      content: Text("Product deleted!"),
+                    ),
+                  );
                 } catch (e) {
                   e.toString();
                   scaffold.showSnackBar(
