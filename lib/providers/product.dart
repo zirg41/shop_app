@@ -22,12 +22,14 @@ class Product with ChangeNotifier {
 
   static const String _authority = "shop-app-2cddb-default-rtdb.firebaseio.com";
 
-  void toggleFavoriteStatus() async {
+  void toggleFavoriteStatus(String token) async {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
 
-    var url = Uri.https(_authority, '/products/$id.json');
+    var url = Uri.parse(
+        'https://shop-app-2cddb-default-rtdb.firebaseio.com/products/$id.json?auth=$token');
+
     try {
       final response = await http.patch(
         url,

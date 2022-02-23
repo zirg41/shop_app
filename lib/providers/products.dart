@@ -72,7 +72,7 @@ class Products with ChangeNotifier {
   Future<void> fetchAndSetProduct() async {
     try {
       var url = Uri.parse(
-          "https://shop-app-2cddb-default-rtdb.firebaseio.com/products.jsons?auth=" +
+          "https://shop-app-2cddb-default-rtdb.firebaseio.com/products.json?auth=" +
               authToken);
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -99,7 +99,7 @@ class Products with ChangeNotifier {
   Future<void> addProduct(Product product) async {
     try {
       var url = Uri.parse(
-          "https://shop-app-2cddb-default-rtdb.firebaseio.com/products.jsons?auth=" +
+          "https://shop-app-2cddb-default-rtdb.firebaseio.com/products.json?auth=" +
               authToken);
       final response = await http.post(
         url,
@@ -136,7 +136,8 @@ class Products with ChangeNotifier {
   void updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      var url = Uri.https(authority, '/products/$id.json?auth=' + authToken);
+      var url = Uri.parse(
+          'https://shop-app-2cddb-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken');
       await http.patch(
         url,
         body: json.encode(
@@ -157,7 +158,8 @@ class Products with ChangeNotifier {
   }
 
   void deleteProduct(String id) async {
-    var url = Uri.https(authority, '/products/$id.json?auth=' + authToken);
+    var url = Uri.parse(
+        'https://shop-app-2cddb-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken');
 
     final existingProductIndex =
         _items.indexWhere((element) => element.id == id);
