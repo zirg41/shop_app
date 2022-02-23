@@ -70,16 +70,22 @@ class Products with ChangeNotifier {
 
   Products(this.authToken, this.userId, this._items);
 
-  Future<void> fetchAndSetProduct() async {
+  Future<void> fetchAndSetProduct([bool filterByUser = false]) async {
     try {
+      final filterString =
+          filterByUser ? '&orderBy="creatorId"&equalTo="$userId"' : '';
       var url = Uri.parse(
           "https://shop-app-2cddb-default-rtdb.firebaseio.com/products.json?auth=" +
-              authToken);
+              authToken +
+              filterString);
+
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
+
       final favoriteResponse = await http.get(Uri.parse(
           'https://shop-app-2cddb-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken'));
       final favoriteData = json.decode(favoriteResponse.body);
+
       final List<Product> loadedProduct = [];
       extractedData?.forEach((prodId, prodData) {
         loadedProduct.add(
@@ -113,11 +119,12 @@ class Products with ChangeNotifier {
           "description": product.description,
           "imageUrl": product.imageUrl,
           "price": product.price,
+          "creatorId": userId,
           // "favorite": product.isFavorite,
         }),
       );
 
-      print(json.decode(response.body));
+      //print(json.decode(response.body));
       final newProduct = Product(
         id: json.decode(response.body)['name'], // using database id
         title: product.title,
