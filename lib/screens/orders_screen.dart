@@ -14,9 +14,14 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
+  bool _isLoading = false;
+
   @override
   void initState() {
-    Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
+    _isLoading = true;
+    Provider.of<Orders>(context, listen: false)
+        .fetchAndSetOrders()
+        .then((value) => _isLoading = false);
   }
 
   @override
@@ -28,12 +33,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
         title: Text("Your orders"),
       ),
       drawer: AppDrawer(),
-      body: ListView.builder(
-        itemCount: orderData.orders.length,
-        itemBuilder: (context, index) => OrderItem(
-          orderData.orders[index],
-        ),
-      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: orderData.orders.length,
+              itemBuilder: (context, index) => OrderItem(
+                orderData.orders[index],
+              ),
+            ),
     );
   }
 }

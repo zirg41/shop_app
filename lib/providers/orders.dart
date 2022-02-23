@@ -55,7 +55,7 @@ class Orders with ChangeNotifier {
         ),
       );
     });
-    _orders = loadedOrders;
+    _orders = loadedOrders.reversed.toList();
     notifyListeners();
   }
 
@@ -67,7 +67,7 @@ class Orders with ChangeNotifier {
       url,
       body: json.encode(
         {
-          'amount': total,
+          'amount': double.parse(total.toStringAsFixed(2)),
           'dateTime': timestamp.toIso8601String(),
           'products': cartProducts
               .map((cp) => {
