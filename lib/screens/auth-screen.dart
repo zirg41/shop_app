@@ -107,6 +107,7 @@ class _AuthCardState extends State<AuthCard>
   final _passwordController = TextEditingController();
   AnimationController _controller;
   Animation<Size> _heightAnimation;
+  Animation<double> opacityAnimation;
 
   @override
   void initState() {
@@ -122,6 +123,13 @@ class _AuthCardState extends State<AuthCard>
       curve: Curves.linear,
     ));
     // _heightAnimation.addListener(() => setState(() {}));
+
+    opacityAnimation = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeIn,
+      ),
+    );
   }
 
   void _showErrorDialog(String message) {
@@ -255,18 +263,21 @@ class _AuthCardState extends State<AuthCard>
                     },
                   ),
                   if (_authMode == AuthMode.Signup)
-                    TextFormField(
-                      enabled: _authMode == AuthMode.Signup,
-                      decoration:
-                          InputDecoration(labelText: 'Confirm Password'),
-                      obscureText: true,
-                      validator: _authMode == AuthMode.Signup
-                          ? (value) {
-                              if (value != _passwordController.text) {
-                                return 'Passwords do not match!';
+                    FadeTransition(
+                      opacity: opacityAnimation,
+                      child: TextFormField(
+                        enabled: _authMode == AuthMode.Signup,
+                        decoration:
+                            InputDecoration(labelText: 'Confirm Password'),
+                        obscureText: true,
+                        validator: _authMode == AuthMode.Signup
+                            ? (value) {
+                                if (value != _passwordController.text) {
+                                  return 'Passwords do not match!';
+                                }
                               }
-                            }
-                          : null,
+                            : null,
+                      ),
                     ),
                   SizedBox(
                     height: 20,
